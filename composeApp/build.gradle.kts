@@ -15,9 +15,9 @@ kotlin {
             }
         }
     }
-    
+
     jvm("desktop")
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -28,15 +28,16 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
         val desktopMain by getting
-        
+
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
             api(libs.ktor.okhttp)
             implementation(libs.ktor.android)
+            implementation(libs.kotlinx.coroutines.android)
         }
 
         commonMain.dependencies {
@@ -57,11 +58,26 @@ kotlin {
             implementation(libs.ktor.serialization.json)
             implementation(libs.ktor.kotlinx.serialization)
 
+            // Koin
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            api(libs.koin.test)
+
+            // ViewModel
+            implementation(libs.mvvm.compose)
+            implementation(libs.mvvm.livedata.compose)
+            implementation(libs.mvvm.flow.compose)
+
+            // Coroutines
+            implementation(libs.kotlinx.coroutines.core)
+
 
         }
 
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
+            api("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.8.0")
+
         }
 
         iosMain.dependencies {
@@ -101,6 +117,14 @@ android {
     }
     dependencies {
         debugImplementation(libs.compose.ui.tooling)
+    }
+
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.11"
     }
 }
 
